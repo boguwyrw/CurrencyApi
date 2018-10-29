@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.Scanner;
 
 public class Main {
+
     public static void main(String[] args) {
 
         String currencyCode;
@@ -55,33 +56,27 @@ public class Main {
         }
         BigDecimal divisor = new BigDecimal(ratesList.size());
         BigDecimal bidMean = bidSum.divide(divisor, 5);
-        //System.out.println("Sredni kurs kupna: " + bidSum.divide(divisor, 5));
         System.out.println("Sredni kurs kupna: " + bidMean);
 
         BigDecimal askMean = askSum.divide(divisor, 5);
-        BigDecimal standardDeviation = new BigDecimal(0.0);
-        BigDecimal askValue = new BigDecimal(0.0);
-        BigDecimal askPow = new BigDecimal(0.0);
+        BigDecimal standardDeviation;
+        BigDecimal askValue;
+        BigDecimal askPow;
         BigDecimal askSumAll = new BigDecimal(0.0);
-        BigDecimal askDeviation = new BigDecimal(0.0);
+        BigDecimal askDeviation;
         for(int k = 0; k < ratesList.size(); k++){
             askValue = ratesList.get(k).getAsk();
             askValue = askValue.subtract(askMean);
             askPow = askValue.pow(2);
             askSumAll = askSumAll.add(askPow);
-            //System.out.println("Po odejmowaniu " + askValue);
-            //System.out.println("Po potegowaniu " + askPow);
-
         }
-        //System.out.println("Sredni kurs sprzedazy: " + askMean);
 
         askDeviation = askSumAll.divide(divisor,5);
-        //System.out.println("Po dzieleniu : " + askDeviation);
         standardDeviation = askDeviation;
         double standardDev = standardDeviation.doubleValue();
         double standDeviation = Math.sqrt(standardDev);
         BigDecimal finalStandDev = new BigDecimal(standDeviation);
-        System.out.println("Odchylenie standardowe: " + finalStandDev.setScale(4, BigDecimal.ROUND_HALF_DOWN));
+        System.out.println("Odchylenie standardowe kursow sprzedazy: " + finalStandDev.setScale(4, BigDecimal.ROUND_HALF_DOWN));
 
     }
 }
