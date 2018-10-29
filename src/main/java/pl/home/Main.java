@@ -15,16 +15,33 @@ public class Main {
     public static void main(String[] args) {
 
         String currencyCode;
-        String dateFrom;
-        String dateTo;
+        String dateFrom = "";
+        String dateTo = "";
+        char[] charDateFrom = new char[10];
+        char[] charDateTo = new char[10];
 
         Scanner scanner = new Scanner(System.in);
         System.out.println("Podaj kod waluty");
         currencyCode = scanner.next();
-        System.out.println("Podaj date poczatkowa");
-        dateFrom = scanner.next();
-        System.out.println("Podaj date koncowa");
-        dateTo = scanner.next();
+        do {
+            System.out.println("Podaj date poczatkowa");
+            dateFrom = scanner.next();
+            charDateFrom = dateFrom.toCharArray();
+            if (charDateFrom[4] == '-') {
+                do {
+                    System.out.println("Podaj date koncowa");
+                    dateTo = scanner.next();
+                    charDateTo = dateTo.toCharArray();
+                    if(charDateTo[4] == '-'){
+                        continue;
+                    } else {
+                        System.out.println("Niepoprawny format daty");
+                    }
+                } while (charDateTo[4] != '-');
+            } else {
+                System.out.println("Niepoprawny format daty");
+            }
+        } while (charDateFrom[4] != '-');
 
         ApiRestCall call = new ApiRestCall();
         String jsonResponse = call.getNBPData(currencyCode, dateFrom, dateTo);
