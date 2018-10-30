@@ -6,10 +6,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
 import java.math.BigDecimal;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Scanner;
 
@@ -20,44 +17,36 @@ public class Main {
         String currencyCode;
         String dateFrom = "";
         String dateTo = "";
-        char[] charDateFrom = new char[10];
-        char[] charDateTo = new char[10];
-        Date start = null;
-        Date end = null;
-
-        Scanner scanner = new Scanner(System.in);
-        System.out.println("Podaj kod waluty");
-        currencyCode = scanner.next();
-        do {
-            System.out.println("Podaj date poczatkowa");
-            dateFrom = scanner.next();
-            try {
-                start = new SimpleDateFormat("yyyy-MM-dd").parse(dateFrom);
-            } catch (ParseException e) {
-                System.out.println("Niepoprawny format daty");
-            }
-            charDateFrom = dateFrom.toCharArray();
-            if (charDateFrom[4] == '-') {
-                do {
-                    System.out.println("Podaj date koncowa");
-                    dateTo = scanner.next();
-                    try {
-                        end = new SimpleDateFormat("yyyy-MM-dd").parse(dateTo);
-                    } catch (ParseException e) {
-                        System.out.println("Niepoprawny format daty");
-                    }
-                    charDateTo = dateTo.toCharArray();
-                    if (start.before(end)){
-                        continue;
-                    } else {
-                        System.out.println("Data koncowa jest mniejsza od poczatkowej");
-                    }
-                } while ((charDateTo[4] != '-') || (start.compareTo(end) > 0));
-            } else {
-                System.out.println("Niepoprawny format daty");
-            }
-        } while (charDateFrom[4] != '-');
-
+        char[] charDateFrom;
+        char[] charDateTo;
+        if (args.length > 0) {
+            currencyCode = args[0];
+            dateFrom = args[1];
+            dateTo = args[2];
+        } else {
+            Scanner scanner = new Scanner(System.in);
+            System.out.println("Podaj kod waluty");
+            currencyCode = scanner.next();
+            do {
+                System.out.println("Podaj date poczatkowa");
+                dateFrom = scanner.next();
+                charDateFrom = dateFrom.toCharArray();
+                if (charDateFrom[4] == '-') {
+                    do {
+                        System.out.println("Podaj date koncowa");
+                        dateTo = scanner.next();
+                        charDateTo = dateTo.toCharArray();
+                        if (charDateTo[4] == '-') {
+                            continue;
+                        } else {
+                            System.out.println("Niepoprawny format daty");
+                        }
+                    } while ((charDateTo[4] != '-'));
+                } else {
+                    System.out.println("Niepoprawny format daty");
+                }
+            } while (charDateFrom[4] != '-');
+        }
 
         ApiRestCall call = new ApiRestCall();
         String jsonResponse = call.getNBPData(currencyCode, dateFrom, dateTo);
